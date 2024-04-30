@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <Header />
       <div className="flex flex-col sm:flex-row-reverse">
-        <main className="h-full w-full px-4 py-8 lg:px-8 max-w-2xl mx-auto">
+        <main className="mx-auto h-full w-full max-w-2xl px-4 py-8 lg:px-8">
           {children}
         </main>
         <Navigation />

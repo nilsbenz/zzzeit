@@ -24,7 +24,7 @@ function NavigationElement({ element }: { element: NavElement }) {
     <li className="px-3 sm:px-2.5 sm:py-1">
       <Link
         to={element.path}
-        className="text-muted-foreground sm:py-1 focus-visible:ring-ring block rounded-sm transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background [&.active]:font-semibold [&.active]:text-foreground"
+        className="block rounded-sm text-muted-foreground transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:py-1 [&.active]:font-semibold [&.active]:text-foreground"
       >
         {({ isActive }) => (
           <span className="flex flex-col items-center gap-y-[3px] text-sm transition-colors lg:flex-row lg:gap-x-3 lg:pl-1.5 lg:text-base">
