@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { HourglassIcon } from "lucide-react";
 
 export default function Header() {
   return (
@@ -10,11 +11,9 @@ export default function Header() {
             className="ml-2 h-9 rounded-md px-2 transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <div className="flex h-full items-center gap-3">
-              <img
-                src="/logo.svg"
-                alt=""
-                className="animate-hourglass size-6 scale-90"
-              />
+              <div className="animate-hourglass">
+                <HourglassIcon className="size-6 scale-90" strokeWidth={3} />
+              </div>
               <h1 className="text-xl font-bold tracking-wide">zzzeit</h1>
             </div>
           </Link>

@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import useDarkMode from "@/lib/hooks/useDarkMode";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import React, { Suspense } from "react";
 
@@ -12,12 +13,16 @@ const TanStackRouterDevtools =
       );
 
 export const Route = createRootRoute({
-  component: () => (
-    <Layout>
-      <Outlet />
-      <Suspense>
-        <TanStackRouterDevtools position="top-right" />
-      </Suspense>
-    </Layout>
-  ),
+  component: () => {
+    useDarkMode();
+
+    return (
+      <Layout>
+        <Outlet />
+        <Suspense>
+          <TanStackRouterDevtools position="top-right" />
+        </Suspense>
+      </Layout>
+    );
+  },
 });

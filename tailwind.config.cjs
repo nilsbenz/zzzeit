@@ -81,14 +81,14 @@ module.exports = {
         },
         "rotate-hourglass": {
           "0%": { transform: "rotate(0deg)" },
-          "10%": { transform: "rotate(180deg)" },
+          "2%": { transform: "rotate(180deg)" },
           "100%": { transform: "rotate(180deg)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        hourglass: "rotate-hourglass 7.5s ease 5s infinite",
+        hourglass: "rotate-hourglass 30s ease 10s infinite",
       },
     },
   },
