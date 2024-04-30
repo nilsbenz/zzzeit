@@ -45,8 +45,8 @@ export function Navigation() {
     <>
       <nav
         className={cn(
-          "fixed bottom-0 left-0 right-0 top-auto z-30 border-t-2 bg-background/80 pb-[--safe-area-bottom] pl-[calc(env(safe-area-inset-left,_0px)_+_1rem)] pr-[calc(env(safe-area-inset-right,_0px)_+_1rem)] backdrop-blur",
-          "sm:right-auto sm:top-14 sm:z-auto sm:border-r-2 sm:border-t-0 sm:pl-[env(safe-area-inset-left,_0px)] sm:pr-0 sm:pt-[calc(env(safe-area-inset-top,_0px)_+_1rem)]"
+          "pb-safe-bottom fixed bottom-0 left-0 right-0 top-auto z-30 border-t-2 bg-background/80 pl-[calc(env(safe-area-inset-left,_0px)_+_1rem)] pr-[calc(env(safe-area-inset-right,_0px)_+_1rem)] backdrop-blur",
+          "sm:pl-safe-left sm:right-auto sm:top-14 sm:z-auto sm:border-r-2 sm:border-t-0 sm:pr-0 sm:pt-[calc(env(safe-area-inset-top,_0px)_+_1rem)]"
         )}
       >
         <ul className="mx-auto grid h-[--nav-height] max-w-sm auto-cols-fr grid-flow-col items-center sm:w-24 sm:grid-flow-row lg:w-48 lg:gap-y-0.5 lg:pt-6">
@@ -55,7 +55,7 @@ export function Navigation() {
           ))}
         </ul>
       </nav>
-      <div className="mb-[--safe-area-bottom] h-[--nav-height] w-full sm:h-px sm:max-w-[6rem] lg:max-w-[12rem]" />
+      <div className="mb-safe-bottom h-[--nav-height] w-full sm:h-px sm:max-w-[6rem] lg:max-w-[12rem]" />
     </>
   );
 }

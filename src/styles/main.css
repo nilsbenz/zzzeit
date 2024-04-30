@@ -71,18 +71,41 @@
 
 @layer base {
   :root {
-    --safe-area-top: max(0px, calc(env(safe-area-inset-top, 0.5rem) - 0.5rem));
-    --safe-area-bottom: max(
-      0px,
-      calc(env(safe-area-inset-bottom, 0.5rem) - 0.5rem)
-    );
     --nav-height: theme(height.16);
   }
 
   * {
     @apply border-border;
   }
+  html {
+    -webkit-text-size-adjust: 100%;
+    min-height: 100dvh;
+  }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection {
+    background-color: hsl(var(--primary) / 0.2);
+  }
+
+  @media (pointer: coarse) {
+    html {
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+    }
+  }
+  @media (display-mode: standalone) {
+    html {
+      min-height: 100vh;
+    }
   }
 }

@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 export default function Header() {
   return (
     <>
-      <header className="pl-[env(safe-area-inset-left, 0px)] pr-[env(safe-area-inset-right, 0px)] fixed left-0 right-0 top-0 z-50 border-b-2 bg-background/80 pt-[--safe-area-top] backdrop-blur-sm">
+      <header className="pl-safe-left pr-safe-right pt-safe-top fixed left-0 right-0 top-0 z-50 border-b-2 bg-background/80 backdrop-blur-sm">
         <div className="-mb-0.5 flex h-14 items-center gap-2">
           <Link
             to="/"
@@ -20,7 +20,7 @@ export default function Header() {
           </Link>
         </div>
       </header>
-      <div className="h-14 w-full" />
+      <div className="mt-safe-top h-14 w-full" />
     </>
   );
 }
