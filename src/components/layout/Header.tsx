@@ -10,11 +10,11 @@ export default function Header() {
             to="/"
             className="ml-2 h-9 rounded-md px-2 transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <div className="flex h-full items-center gap-3">
+            <div className="flex h-full items-center gap-1.5 lg:gap-3">
               <div className="animate-hourglass">
-                <HourglassIcon className="size-6 scale-90" strokeWidth={3} />
+                <HourglassIcon className="size-6 scale-90" strokeWidth={3.25} />
               </div>
-              <h1 className="text-xl font-bold tracking-wide">zzzeit</h1>
+              <h1 className="font-brand text-xl">zzzeit</h1>
             </div>
           </Link>
         </div>

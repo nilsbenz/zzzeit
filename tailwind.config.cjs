@@ -61,6 +61,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        brand: ["var(--font-brand)", "var(--font-sans)", ...fontFamily.sans],
       },
       screens: { standalone: { raw: "(display-mode: standalone)" } },
       spacing: {
