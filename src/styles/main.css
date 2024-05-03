@@ -110,3 +110,18 @@
     }
   }
 }
+
+@layer components {
+  .h1 {
+    font-size: theme(fontSize.4xl);
+    font-weight: theme(fontWeight[semibold]);
+  }
+  .h2 {
+    font-size: theme(fontSize.2xl);
+    font-weight: theme(fontWeight[medium]);
+  }
+  .h3 {
+    font-size: theme(fontSize[lg]);
+    font-weight: theme(fontWeight[medium]);
+  }
+}

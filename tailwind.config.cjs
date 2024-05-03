@@ -63,7 +63,6 @@ module.exports = {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         brand: ["var(--font-brand)", "var(--font-sans)", ...fontFamily.sans],
       },
-      screens: { standalone: { raw: "(display-mode: standalone)" } },
       spacing: {
         "safe-top": "max(0px, calc(env(safe-area-inset-top, 0.5rem) - 0.5rem))",
         "safe-bottom":

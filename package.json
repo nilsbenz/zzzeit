@@ -11,6 +11,7 @@
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-router": "^1.31.3",
     "class-variance-authority": "^0.7.0",

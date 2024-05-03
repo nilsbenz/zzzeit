@@ -1,11 +1,14 @@
+import { auth } from "@/lib/firebase";
 import { Link } from "@tanstack/react-router";
-import { HourglassIcon } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { HourglassIcon, LogOutIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function Header() {
   return (
     <>
-      <header className="pl-safe-left pr-safe-right pt-safe-top fixed left-0 right-0 top-0 z-50 border-b-2 bg-background/80 backdrop-blur-sm">
-        <div className="-mb-0.5 flex h-14 items-center gap-2">
+      <header className="fixed left-0 right-0 top-0 z-50 border-b-2 bg-background/80 pl-safe-left pr-safe-right pt-safe-top backdrop-blur-sm">
+        <div className="-mb-0.5 flex h-14 items-center justify-between gap-2">
           <Link
             to="/"
             className="ml-2 h-9 rounded-md px-2 transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -17,6 +20,16 @@ export default function Header() {
               <h1 className="font-brand text-xl">zzzeit</h1>
             </div>
           </Link>
+          <div className="pr-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-9 transition-shadow hover:bg-transparent focus-visible:ring-offset-0"
+              onClick={async () => await signOut(auth)}
+            >
+              <LogOutIcon className="size-5" strokeWidth={2.5} />
+            </Button>
+          </div>
         </div>
       </header>
       <div className="mt-safe-top h-14 w-full" />
