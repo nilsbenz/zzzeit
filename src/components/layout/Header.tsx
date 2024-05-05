@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { signOut } from "firebase/auth";
 import { HourglassIcon, LogOutIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   return (
@@ -20,7 +21,11 @@ export default function Header() {
               <h1 className="font-brand text-xl">zzzeit</h1>
             </div>
           </Link>
-          <div className="pr-2">
+          <div className="flex gap-2 pr-3 lg:hidden">
+            <ThemeToggle
+              variant="ghost"
+              className="size-9 transition-shadow hover:bg-transparent focus-visible:ring-offset-0"
+            />
             <Button
               variant="ghost"
               size="icon"

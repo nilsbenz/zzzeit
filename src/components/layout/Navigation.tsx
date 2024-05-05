@@ -1,11 +1,16 @@
+import { auth } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
+import { signOut } from "firebase/auth";
 import {
   CalendarDaysIcon,
   ListIcon,
+  LogOutIcon,
   LucideIcon,
   TimerIcon,
 } from "lucide-react";
+import { Button } from "../ui/button";
+import ThemeToggle from "./ThemeToggle";
 
 type NavElement = {
   path: string;
@@ -43,18 +48,31 @@ function NavigationElement({ element }: { element: NavElement }) {
 export function Navigation() {
   return (
     <>
-      <nav
+      <aside
         className={cn(
-          "pb-safe-bottom fixed bottom-0 left-0 right-0 top-auto z-30 border-t-2 bg-background/80 pl-[calc(env(safe-area-inset-left,_0px)_+_1rem)] pr-[calc(env(safe-area-inset-right,_0px)_+_1rem)] backdrop-blur",
-          "sm:pl-safe-left sm:right-auto sm:top-14 sm:z-auto sm:border-r-2 sm:border-t-0 sm:pr-0 sm:pt-[calc(env(safe-area-inset-top,_0px)_+_1rem)]"
+          "fixed bottom-0 left-0 right-0 top-auto z-30 border-t-2 bg-background/80 pb-safe-bottom pl-[calc(env(safe-area-inset-left,_0px)_+_1rem)] pr-[calc(env(safe-area-inset-right,_0px)_+_1rem)] backdrop-blur",
+          "sm: flex sm:right-auto sm:top-14 sm:z-auto sm:flex-col sm:border-r-2 sm:border-t-0 sm:pl-safe-left sm:pr-0 sm:pt-[calc(env(safe-area-inset-top,_0px)_+_1rem)]"
         )}
       >
-        <ul className="mx-auto grid h-[--nav-height] max-w-sm auto-cols-fr grid-flow-col items-center sm:w-24 sm:grid-flow-row lg:w-48 lg:gap-y-0.5 lg:pt-6">
-          {navElements.map((e) => (
-            <NavigationElement element={e} key={e.path} />
-          ))}
-        </ul>
-      </nav>
+        <nav className="mx-auto max-w-sm grow">
+          <ul className="grid h-[--nav-height] auto-cols-fr grid-flow-col items-center sm:w-24 sm:grid-flow-row lg:w-48 lg:gap-y-0.5 lg:pt-6">
+            {navElements.map((e) => (
+              <NavigationElement element={e} key={e.path} />
+            ))}
+          </ul>
+        </nav>
+        <div className="hidden gap-2 p-4 lg:flex">
+          <Button
+            variant="outline"
+            className="w-full gap-1.5"
+            onClick={async () => await signOut(auth)}
+          >
+            <LogOutIcon className="size-5" strokeWidth={2.5} />
+            Logout
+          </Button>
+          <ThemeToggle className="shrink-0" />
+        </div>
+      </aside>
       <div className="mb-safe-bottom h-[--nav-height] w-full sm:h-px sm:max-w-[6rem] lg:max-w-[12rem]" />
     </>
   );
