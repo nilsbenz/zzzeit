@@ -1,8 +1,6 @@
-import Auth from "@/components/auth/Auth";
 import Layout from "@/components/layout/Layout";
-import SplashScreen from "@/components/layout/SplashScreen";
+import { AuthContextProvider } from "@/lib/context/auth";
 import useDarkMode from "@/lib/hooks/useDarkMode";
-import useUser from "@/lib/hooks/useUser";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import React, { Suspense } from "react";
 
@@ -16,27 +14,21 @@ const TanStackRouterDevtools = ["production", "development"].includes(
       }))
     );
 
-export const Route = createRootRoute({
-  component: () => {
-    useDarkMode();
+function Root() {
+  useDarkMode();
 
-    const { user, isLoading } = useUser();
-
-    if (isLoading) {
-      return <SplashScreen />;
-    }
-
-    if (!user) {
-      return <Auth />;
-    }
-
-    return (
+  return (
+    <AuthContextProvider>
       <Layout>
         <Outlet />
         <Suspense>
           <TanStackRouterDevtools position="bottom-left" />
         </Suspense>
       </Layout>
-    );
-  },
+    </AuthContextProvider>
+  );
+}
+
+export const Route = createRootRoute({
+  component: Root,
 });

@@ -16,6 +16,7 @@ export default defineConfig({
         "favicon.ico",
         "apple-touch-icon-180x180.png",
         "maskable-icon-512x512.png",
+        "assets/Fugaz_One/FugazOne-Regular.ttf",
       ],
       manifest: {
         name: "zzzeit",
