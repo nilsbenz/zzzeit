@@ -8,8 +8,8 @@ jobs:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v3
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 8
       - run: pnpm install --frozen-lockfile && pnpm build
