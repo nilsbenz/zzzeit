@@ -1,5 +1,10 @@
+import Layout from "@/components/layout/Layout";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/")({
-  component: () => <div>Hello /!</div>,
+  component: () => (
+    <Layout>
+      <div>Hello /!</div>
+    </Layout>
+  ),
 });

@@ -1,4 +1,3 @@
-import Layout from "@/components/layout/Layout";
 import { AuthContextProvider } from "@/lib/context/auth";
 import useDarkMode from "@/lib/hooks/useDarkMode";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
@@ -19,12 +18,10 @@ function Root() {
 
   return (
     <AuthContextProvider>
-      <Layout>
-        <Outlet />
-        <Suspense>
-          <TanStackRouterDevtools position="bottom-left" />
-        </Suspense>
-      </Layout>
+      <Outlet />
+      <Suspense>
+        <TanStackRouterDevtools position="bottom-left" />
+      </Suspense>
     </AuthContextProvider>
   );
 }
