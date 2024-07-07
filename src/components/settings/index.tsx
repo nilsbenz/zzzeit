@@ -55,7 +55,7 @@ export default function Settings() {
   const { ternaryDarkMode, setTernaryDarkMode } = useTernaryDarkMode();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <h2 className="h1 standalone:hidden">Settings</h2>
       <Item label="Mail address">
         <p>{user.email}</p>
@@ -72,7 +72,7 @@ export default function Settings() {
             <SelectContent>
               {Object.entries(themeOptions).map(
                 ([key, { label, icon: Icon }]) => (
-                  <SelectItem value={key}>
+                  <SelectItem key={key} value={key}>
                     <span className="flex items-center gap-2">
                       <Icon className="size-5" strokeWidth={2.25} />
                       {label}

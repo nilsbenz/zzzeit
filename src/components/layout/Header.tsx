@@ -57,7 +57,7 @@ export default function Header({
               ) : (
                 <div className="shrink-0 animate-hourglass">
                   <HourglassIcon
-                    className="size-6 scale-90"
+                    className="standalone:text-muted-foreground size-6 scale-90"
                     strokeWidth={3.25}
                   />
                 </div>

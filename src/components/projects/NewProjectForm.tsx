@@ -80,7 +80,7 @@ export default function NewProjectForm({
       };
       await setDoc(projectRef, newProject);
       form.reset({ name: "", slug: "" });
-      setOpenDialog(false);
+      handleOpenChange(false);
     } catch (e) {
       console.log(e);
     } finally {
