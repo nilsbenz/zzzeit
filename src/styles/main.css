@@ -73,10 +73,12 @@
 @layer base {
   :root {
     --nav-height: theme(height.16);
+    --nav-width-sm: theme(width.24);
+    --nav-width-lg: theme(width.52);
   }
 
   * {
-    @apply border-border;
+    border-color: theme(borderColor[border]);
   }
   html {
     -webkit-text-size-adjust: 100%;

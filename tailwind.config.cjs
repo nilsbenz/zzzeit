@@ -19,6 +19,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        standalone: { raw: "(display-mode: standalone)" },
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

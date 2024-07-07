@@ -1,3 +1,4 @@
+import FirestoreSubscriber from "@/components/common/FirestoreSubscriber";
 import { AuthContextProvider } from "@/lib/context/auth";
 import useDarkMode from "@/lib/hooks/useDarkMode";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
@@ -18,7 +19,9 @@ function Root() {
 
   return (
     <AuthContextProvider>
-      <Outlet />
+      <FirestoreSubscriber>
+        <Outlet />
+      </FirestoreSubscriber>
       <Suspense>
         <TanStackRouterDevtools position="bottom-left" />
       </Suspense>

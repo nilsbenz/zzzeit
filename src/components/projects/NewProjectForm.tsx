@@ -38,7 +38,17 @@ const FormSchema = z.object({
     .toLowerCase(),
 });
 
-export default function NewProjectForm() {
+export default function NewProjectForm({
+  dialogOnly,
+  open,
+  onOpenChange,
+}:
+  | { dialogOnly?: false; open?: never; onOpenChange?: never }
+  | {
+      dialogOnly: true;
+      open: boolean;
+      onOpenChange: (open: boolean) => void;
+    }) {
   const [openDialog, setOpenDialog] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -80,18 +90,21 @@ export default function NewProjectForm() {
 
   function handleOpenChange(open: boolean) {
     setOpenDialog(open);
+    onOpenChange?.(open);
     if (!open) {
       form.reset({ name: "", slug: "" });
     }
   }
 
   return (
-    <Dialog open={openDialog} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button size="sm">
-          New <PlusIcon strokeWidth={2.5} />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open ?? openDialog} onOpenChange={handleOpenChange}>
+      {!dialogOnly && (
+        <DialogTrigger asChild>
+          <Button size="sm">
+            New <PlusIcon strokeWidth={2.5} />
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add new Project</DialogTitle>

@@ -1,11 +1,11 @@
 import Layout from "@/components/layout/Layout";
-import Projects from "@/components/projects";
+import Settings from "@/components/settings";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/projects")({
+export const Route = createLazyFileRoute("/settings")({
   component: () => (
-    <Layout>
-      <Projects />
+    <Layout title="Settings">
+      <Settings />
     </Layout>
   ),
 });

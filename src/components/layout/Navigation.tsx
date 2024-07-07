@@ -7,6 +7,7 @@ import {
   ListIcon,
   LogOutIcon,
   LucideIcon,
+  Settings2Icon,
   TimerIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -22,11 +23,19 @@ const navElements = [
   { path: "/", text: "Tracker", icon: TimerIcon },
   { path: "/logs", text: "Logs", icon: CalendarDaysIcon },
   { path: "/projects", text: "Projects", icon: ListIcon },
+  { path: "/settings", text: "Settings", icon: Settings2Icon },
 ];
 
 function NavigationElement({ element }: { element: NavElement }) {
   return (
-    <li className="px-3 sm:px-2.5 sm:py-1">
+    <li
+      className={cn(
+        "px-3 sm:px-2.5 sm:py-1",
+        ["/settings"].includes(element.path)
+          ? "standalone:block hidden"
+          : "block"
+      )}
+    >
       <Link
         to={element.path}
         className="block rounded-sm text-muted-foreground transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:py-1 [&.active]:font-semibold [&.active]:text-foreground"
@@ -55,7 +64,7 @@ export function Navigation() {
         )}
       >
         <nav className="mx-auto max-w-sm grow">
-          <ul className="grid h-[--nav-height] auto-cols-fr grid-flow-col items-center sm:w-24 sm:grid-flow-row lg:w-48 lg:gap-y-0.5 lg:pt-6">
+          <ul className="grid h-[--nav-height] auto-cols-fr grid-flow-col items-center sm:w-[--nav-width-sm] sm:grid-flow-row lg:w-[--nav-width-lg] lg:gap-y-0.5 lg:pt-6">
             {navElements.map((e) => (
               <NavigationElement element={e} key={e.path} />
             ))}
@@ -64,7 +73,7 @@ export function Navigation() {
         <div className="hidden gap-2 p-4 lg:flex">
           <Button
             variant="outline"
-            className="w-full gap-1.5"
+            className="w-full justify-start gap-1.5 px-2"
             onClick={async () => await signOut(auth)}
           >
             <LogOutIcon className="size-5" strokeWidth={2.5} />
@@ -73,7 +82,7 @@ export function Navigation() {
           <ThemeToggle className="shrink-0" />
         </div>
       </aside>
-      <div className="mb-safe-bottom h-[--nav-height] w-full sm:h-px sm:max-w-[6rem] lg:max-w-[12rem]" />
+      <div className="mb-safe-bottom h-[--nav-height] w-full shrink-0 sm:h-px sm:w-[--nav-width-sm] lg:w-[--nav-width-lg]" />
     </>
   );
 }
