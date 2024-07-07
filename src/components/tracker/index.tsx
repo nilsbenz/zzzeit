@@ -7,6 +7,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { useAtomValue } from "jotai";
 import { PlusIcon } from "lucide-react";
 import Loading from "../common/Loading";
+import Layout from "../layout/Layout";
 import { Button } from "../ui/button";
 import TrackerCard from "./TrackerCard";
 
@@ -29,38 +30,52 @@ export default function Tracker() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="standalone:hidden flex items-center justify-between">
-        <h2 className="h1">Tracker</h2>
-        {trackers && trackers.length > 0 && (
-          <Button size="sm" onClick={handleAddTracker}>
-            Add <PlusIcon strokeWidth={2.5} />
-          </Button>
+    <Layout
+      headerActions={
+        trackers && trackers.length > 0
+          ? [
+              {
+                icon: PlusIcon,
+                variant: "default",
+                onClick: handleAddTracker,
+              },
+            ]
+          : undefined
+      }
+    >
+      <div className="space-y-6">
+        <div className="standalone:hidden flex items-center justify-between">
+          <h2 className="h1">Tracker</h2>
+          {trackers && trackers.length > 0 && (
+            <Button size="sm" onClick={handleAddTracker}>
+              Add <PlusIcon strokeWidth={2.5} />
+            </Button>
+          )}
+        </div>
+        {trackers ? (
+          trackers.length > 0 ? (
+            <div className="space-y-4">
+              {trackers.map((tracker) => (
+                <TrackerCard key={tracker.id} tracker={tracker} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center py-8">
+              <Button
+                onClick={handleAddTracker}
+                className="h-fit w-full max-w-60 flex-col items-center"
+              >
+                <PlusIcon className="!size-8" strokeWidth={2.25} />
+                <span className="text-lg">Add Tracker</span>
+              </Button>
+            </div>
+          )
+        ) : (
+          <div className="flex h-40 items-center justify-center">
+            <Loading />
+          </div>
         )}
       </div>
-      {trackers ? (
-        trackers.length > 0 ? (
-          <div className="space-y-4">
-            {trackers.map((tracker) => (
-              <TrackerCard key={tracker.id} tracker={tracker} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center py-8">
-            <Button
-              onClick={handleAddTracker}
-              className="h-fit w-full max-w-60 flex-col items-center"
-            >
-              <PlusIcon className="!size-8" strokeWidth={2.25} />
-              <span className="text-lg">Add Tracker</span>
-            </Button>
-          </div>
-        )
-      ) : (
-        <div className="flex h-40 items-center justify-center">
-          <Loading />
-        </div>
-      )}
-    </div>
+    </Layout>
   );
 }

@@ -31,7 +31,8 @@ export default function Projects() {
                 <div>
                   <h3 className="h3">{project.name}</h3>
                   <p className="text-muted-foreground">
-                    {project.timeBalance} Hours
+                    {Number((project.timeBalance / 60).toFixed(1))}{" "}
+                    {project.timeBalance === 60 ? "Hour" : "Hours"}
                   </p>
                 </div>
                 <ChevronRightIcon strokeWidth={3.25} className="size-5" />

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useInterval } from "usehooks-ts";
 import * as z from "zod";
 import NewProjectForm from "../projects/NewProjectForm";
 import { Button } from "../ui/button";
@@ -69,6 +70,9 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
   });
   const [formState, setFormState] = useState<"idle" | "busy">("idle");
   const [openNewProject, setOpenNewProject] = useState(false);
+  const [minutesSinceStart, setMinutesSinceStart] = useState(
+    Math.max(0, Math.ceil((new Date().getTime() - tracker.start) / (1000 * 60)))
+  );
   const projects = useAtomValue(projectsAtom);
 
   async function handleRemove() {
@@ -124,12 +128,24 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
     }
   }
 
+  useInterval(
+    () => {
+      setMinutesSinceStart(
+        Math.max(
+          0,
+          Math.ceil((new Date().getTime() - tracker.start) / (1000 * 60))
+        )
+      );
+    },
+    tracker.end ? null : 1000
+  );
+
   return (
     <>
       <Card key={tracker.id}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardHeader>
+            <CardHeader className="pb-0">
               <div className="flex flex-wrap items-start justify-between gap-x-2">
                 <FormField
                   control={form.control}
@@ -148,12 +164,12 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                             start: new Date(e.currentTarget.value).getTime(),
                           });
                         }}
-                        className="mr-auto w-fit text-lg font-medium"
+                        className="mr-auto w-fit text-lg font-semibold"
                       />
                     </FormItem>
                   )}
                 />
-                {tracker.end && (
+                {tracker.end ? (
                   <FormField
                     control={form.control}
                     name="end"
@@ -173,16 +189,25 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                               end: new Date(e.currentTarget.value).getTime(),
                             });
                           }}
-                          className="mr-auto w-fit text-lg font-medium"
+                          className="mr-auto w-fit text-lg font-semibold"
                         />
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+                ) : (
+                  <p className="ml-auto mt-3 flex h-10 items-center self-end rounded-md bg-primary px-4 font-mono text-lg font-semibold text-primary-foreground">
+                    {String(Math.floor(minutesSinceStart / 60)).padStart(
+                      2,
+                      "0"
+                    )}
+                    <span className="animate-pulse">:</span>
+                    {String(minutesSinceStart % 60).padStart(2, "0")}
+                  </p>
                 )}
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 py-3">
               <FormField
                 control={form.control}
                 name="project"
