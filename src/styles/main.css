@@ -37,6 +37,7 @@
     --radius: 0.5rem;
     --font-sans: "Poppins";
     --font-brand: "FugazOne";
+    --font-mono: "JetBrainsMono";
   }
 
   .dark {
@@ -72,6 +73,7 @@
 
 @layer base {
   :root {
+    --header-height: theme(height.14);
     --nav-height: theme(height.16);
     --nav-width-sm: theme(width.24);
     --nav-width-lg: theme(width.52);

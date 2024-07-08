@@ -21,7 +21,7 @@ import {
   SaveIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useInterval } from "usehooks-ts";
 import * as z from "zod";
@@ -48,6 +48,15 @@ function formatDate(date: Date) {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+function getDuration(tracker: Tracker) {
+  return Math.max(
+    0,
+    Math.ceil(
+      ((tracker.end ?? new Date().getTime()) - tracker.start) / (1000 * 60)
+    )
+  );
+}
+
 const FormSchema = z.object({
   start: z.string(),
   end: z.string(),
@@ -71,7 +80,7 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
   const [formState, setFormState] = useState<"idle" | "busy">("idle");
   const [openNewProject, setOpenNewProject] = useState(false);
   const [minutesSinceStart, setMinutesSinceStart] = useState(
-    Math.max(0, Math.ceil((new Date().getTime() - tracker.start) / (1000 * 60)))
+    getDuration(tracker)
   );
   const projects = useAtomValue(projectsAtom);
 
@@ -87,6 +96,12 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
         console.error(e);
       }
     }
+  }
+
+  async function handleStopClicked() {
+    const now = new Date();
+    form.setValue("end", formatDate(now));
+    await handleChange({ end: now.getTime() });
   }
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -130,19 +145,25 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
 
   useInterval(
     () => {
-      setMinutesSinceStart(
-        Math.max(
-          0,
-          Math.ceil((new Date().getTime() - tracker.start) / (1000 * 60))
-        )
-      );
+      setMinutesSinceStart(getDuration(tracker));
     },
     tracker.end ? null : 1000
   );
 
+  useEffect(() => {
+    setMinutesSinceStart(getDuration(tracker));
+  }, [tracker]);
+
+  useEffect(() => {
+    if (projects && projects.length === 1) {
+      form.setValue("project", projects[0].id);
+      handleChange({ project: projects[0].id });
+    }
+  }, [projects]);
+
   return (
     <>
-      <Card key={tracker.id}>
+      <Card className="relative isolate">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardHeader className="pb-0">
@@ -152,10 +173,12 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                   name="start"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="start">Start</FormLabel>
+                      <FormLabel htmlFor={`start-${tracker.id}`}>
+                        Start
+                      </FormLabel>
                       <Input
                         type="datetime-local"
-                        id="start"
+                        id={`start-${tracker.id}`}
                         defaultValue={field.value}
                         onChange={field.onChange}
                         onBlur={(e) => {
@@ -164,23 +187,25 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                             start: new Date(e.currentTarget.value).getTime(),
                           });
                         }}
-                        className="mr-auto w-fit text-lg font-semibold"
+                        className="w-fit bg-background/20 py-0 text-lg font-semibold backdrop-blur-sm"
                       />
                     </FormItem>
                   )}
                 />
-                {tracker.end ? (
+                {tracker.end && (
                   <FormField
                     control={form.control}
                     name="end"
                     render={({ field }) => (
                       <FormItem className="ml-auto">
                         <div className="text-right">
-                          <FormLabel htmlFor="end">End</FormLabel>
+                          <FormLabel htmlFor={`end-${tracker.id}`}>
+                            End
+                          </FormLabel>
                         </div>
                         <Input
                           type="datetime-local"
-                          id="end"
+                          id={`end-${tracker.id}`}
                           defaultValue={field.value}
                           onChange={field.onChange}
                           onBlur={(e) => {
@@ -189,21 +214,12 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                               end: new Date(e.currentTarget.value).getTime(),
                             });
                           }}
-                          className="mr-auto w-fit text-lg font-semibold"
+                          className="ml-auto w-fit bg-background/20 py-0 text-lg font-semibold backdrop-blur-sm"
                         />
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                ) : (
-                  <p className="ml-auto mt-3 flex h-10 items-center self-end rounded-md bg-primary px-4 font-mono text-lg font-semibold text-primary-foreground">
-                    {String(Math.floor(minutesSinceStart / 60)).padStart(
-                      2,
-                      "0"
-                    )}
-                    <span className="animate-pulse">:</span>
-                    {String(minutesSinceStart % 60).padStart(2, "0")}
-                  </p>
                 )}
               </div>
             </CardHeader>
@@ -221,6 +237,7 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                           field.onChange(v);
                           handleChange({ project: v });
                         }}
+                        disabled={!projects || projects.length === 0}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Choose project" />
@@ -246,7 +263,11 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                         </SelectContent>
                       </Select>
                       <Button
-                        variant="outline"
+                        variant={
+                          projects && projects.length == 0
+                            ? "default"
+                            : "outline"
+                        }
                         type="button"
                         onClick={() => setOpenNewProject(true)}
                       >
@@ -300,21 +321,19 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                     Save <SaveIcon strokeWidth={2.25} />
                   </Button>
                 ) : (
-                  <Button
-                    onClick={() => {
-                      const now = new Date();
-                      handleChange({ end: now.getTime() });
-                      form.setValue("end", formatDate(now));
-                    }}
-                    type="button"
-                  >
-                    Pause <PauseIcon strokeWidth={2.25} />
+                  <Button onClick={handleStopClicked} type="button">
+                    Stop <PauseIcon strokeWidth={2.25} />
                   </Button>
                 )}
               </div>
             </CardFooter>
           </form>
         </Form>
+        <p className="absolute right-2 top-2 -z-10 font-mono text-6xl font-extrabold text-foreground/25">
+          {String(Math.floor(minutesSinceStart / 60)).padStart(2, "0")}
+          <span className={cn(!tracker.end && "animate-pulse")}>:</span>
+          {String(minutesSinceStart % 60).padStart(2, "0")}
+        </p>
       </Card>
       <NewProjectForm
         dialogOnly

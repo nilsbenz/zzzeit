@@ -65,6 +65,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         brand: ["var(--font-brand)", "var(--font-sans)", ...fontFamily.sans],
+        mono: ["var(--font-mono)", ...fontFamily.mono],
       },
       spacing: {
         "safe-top": "max(0px, calc(env(safe-area-inset-top, 0.5rem) - 0.5rem))",
