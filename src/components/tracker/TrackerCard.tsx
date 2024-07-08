@@ -108,6 +108,8 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
     try {
       setFormState("busy");
       const log: Log = {
+        type: "report",
+        id: tracker.id,
         start: new Date(data.start).getTime(),
         end: new Date(data.end).getTime(),
         comment: data.comment ?? "",
@@ -151,6 +153,13 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
   );
 
   useEffect(() => {
+    form.reset({
+      start: formatDate(new Date(tracker.start)),
+      end: tracker.end ? formatDate(new Date(tracker.end)) : undefined,
+      project: tracker.project ?? undefined,
+      comment: tracker.comment,
+    });
+    setOpenComment((prev) => prev || !!tracker.comment);
     setMinutesSinceStart(getDuration(tracker));
   }, [tracker]);
 
@@ -179,7 +188,7 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                       <Input
                         type="datetime-local"
                         id={`start-${tracker.id}`}
-                        defaultValue={field.value}
+                        value={field.value}
                         onChange={field.onChange}
                         onBlur={(e) => {
                           field.onBlur();
@@ -206,7 +215,7 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
                         <Input
                           type="datetime-local"
                           id={`end-${tracker.id}`}
-                          defaultValue={field.value}
+                          value={field.value}
                           onChange={field.onChange}
                           onBlur={(e) => {
                             field.onBlur();

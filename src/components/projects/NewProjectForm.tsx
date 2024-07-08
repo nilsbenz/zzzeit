@@ -74,6 +74,7 @@ export default function NewProjectForm({
         name: data.name,
         notes: "",
         timeBalance: 0,
+        billedAmount: 0,
         recentLogs: [],
         previousBlock: null,
         createdAt: new Date().getTime(),
