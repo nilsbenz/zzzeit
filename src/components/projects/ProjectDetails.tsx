@@ -158,7 +158,7 @@ function CalendarDay({
                 Logs from {formatDate(date, "MMMM dd, yyyy")}
               </DrawerTitle>
             </DrawerHeader>
-            <div className="grow divide-y-2 px-4">
+            <div className="grow divide-y-2 p-4">
               {dayLogs?.map((log) => (
                 <DayLogsListItem key={log.id} project={project} log={log} />
               ))}
