@@ -59,12 +59,12 @@ export function Navigation() {
     <>
       <aside
         className={cn(
-          "fixed bottom-0 left-0 right-0 top-auto z-30 h-[--nav-height] border-t-2 bg-background/80 pb-safe-bottom pl-[calc(var(--safe-left)_+_1rem)] pr-[calc(var(--safe-right)_+_1rem)] backdrop-blur",
-          "sm:right-auto sm:top-0 sm:z-auto sm:flex sm:h-full sm:w-[--nav-width-sm] sm:flex-col sm:border-r-2 sm:border-t-0 sm:pl-safe-left sm:pr-0 sm:pt-[calc(var(--safe-top)_+_var(--header-height)_+_1rem)] lg:w-[--nav-width-lg]"
+          "fixed bottom-0 left-0 right-0 top-auto z-30 border-t-2 bg-background/80 pb-safe-bottom pl-[calc(var(--safe-left)_+_1rem)] pr-[calc(var(--safe-right)_+_1rem)] backdrop-blur",
+          "sm:right-auto sm:top-0 sm:z-auto sm:flex sm:w-[--nav-width-sm] sm:flex-col sm:border-r-2 sm:border-t-0 sm:pl-safe-left sm:pr-0 sm:pt-[calc(var(--safe-top)_+_var(--header-height)_+_2px)] lg:w-[--nav-width-lg]"
         )}
       >
-        <nav className="mx-auto h-full w-full max-w-sm grow sm:h-fit">
-          <ul className="grid h-full auto-cols-fr grid-flow-col items-center sm:h-fit sm:grid-flow-row lg:gap-y-0.5 lg:pt-6">
+        <nav className="mx-auto w-full max-w-sm grow">
+          <ul className="grid h-[--nav-height] auto-cols-fr grid-flow-col items-center sm:h-fit sm:grid-flow-row lg:gap-y-0.5 lg:pt-6">
             {navElements.map((e) => (
               <NavigationElement element={e} key={e.path} />
             ))}
@@ -82,7 +82,7 @@ export function Navigation() {
           <ThemeToggle className="shrink-0" />
         </div>
       </aside>
-      <div className="row-start-3 mb-safe-bottom h-[--nav-height] w-full shrink-0 sm:row-start-2 sm:h-px sm:w-[--nav-width-sm] sm:pl-safe-left lg:w-[--nav-width-lg]" />
+      <div className="row-start-3 mb-safe-bottom mt-[2px] h-[--nav-height] w-full shrink-0 sm:row-start-2 sm:h-px sm:w-[--nav-width-sm] sm:pl-safe-left lg:w-[--nav-width-lg]" />
     </>
   );
 }

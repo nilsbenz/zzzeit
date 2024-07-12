@@ -29,8 +29,8 @@ export default function Header({
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 h-[--header-height] border-b-2 bg-background/80 pl-safe-left pr-safe-right pt-safe-top backdrop-blur-sm">
-        <div className="flex h-full items-center justify-between gap-2">
+      <header className="fixed left-0 right-0 top-0 z-50 border-b-2 bg-background/80 pl-safe-left pr-safe-right pt-safe-top backdrop-blur-sm">
+        <div className="flex h-[--header-height] items-center justify-between gap-2">
           <Link
             to={isStandalone ? "#" : "/"}
             tabIndex={isStandalone ? -1 : undefined}
@@ -95,7 +95,7 @@ export default function Header({
           </Link>
         </div>
       </header>
-      <div className="mt-safe-top h-[--header-height] w-full sm:col-span-2" />
+      <div className="mb-[2px] mt-safe-top h-[--header-height] w-full sm:col-span-2" />
     </>
   );
 }
