@@ -68,11 +68,10 @@ module.exports = {
         mono: ["var(--font-mono)", ...fontFamily.mono],
       },
       spacing: {
-        "safe-top": "max(0px, calc(env(safe-area-inset-top, 0.5rem) - 0.5rem))",
-        "safe-bottom":
-          "max(0px, calc(env(safe-area-inset-bottom, 1rem) - 1rem))",
-        "safe-left": "env(safe-area-inset-left, 0px)",
-        "safe-right": "env(safe-area-inset-right, 0px)",
+        "safe-top": "var(--safe-top)",
+        "safe-bottom": "var(--safe-bottom)",
+        "safe-left": "var(--safe-left)",
+        "safe-right": "var(--safe-right)",
       },
       keyframes: {
         "accordion-down": {

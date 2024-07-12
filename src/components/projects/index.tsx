@@ -1,4 +1,5 @@
 import { projectsAtom } from "@/lib/atoms";
+import useIsStandalone from "@/lib/hooks/useIsStandalone";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
@@ -9,13 +10,16 @@ import NewProjectForm from "./NewProjectForm";
 
 export default function Projects() {
   const projects = useAtomValue(projectsAtom);
+  const isStandalone = useIsStandalone();
 
   return (
     <div className="space-y-6">
-      <div className="standalone:hidden flex items-center justify-between">
-        <h2 className="h1">Projects</h2>
-        <NewProjectForm />
-      </div>
+      {!isStandalone && (
+        <div className="flex items-center justify-between">
+          <h2 className="h1">Projects</h2>
+          <NewProjectForm />
+        </div>
+      )}
       <div className="divide-y-2">
         {projects ? (
           projects.map((project) => (

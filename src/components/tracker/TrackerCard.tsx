@@ -1,18 +1,12 @@
 import { projectsAtom } from "@/lib/atoms";
 import { Collection } from "@/lib/collections";
-import { projectConverter } from "@/lib/converters";
 import { db } from "@/lib/firebase";
+import { addLog } from "@/lib/logs";
 import { Log, Tracker } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, getDuration } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
-import {
-  arrayUnion,
-  deleteDoc,
-  doc,
-  runTransaction,
-  updateDoc,
-} from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useAtomValue } from "jotai";
 import {
   PauseIcon,
@@ -46,15 +40,6 @@ function formatDate(date: Date) {
   const hours = ("0" + date.getHours()).slice(-2);
   const minutes = ("0" + date.getMinutes()).slice(-2);
   return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
-
-function getDuration(tracker: Tracker) {
-  return Math.max(
-    0,
-    Math.ceil(
-      ((tracker.end ?? new Date().getTime()) - tracker.start) / (1000 * 60)
-    )
-  );
 }
 
 const FormSchema = z.object({
@@ -108,36 +93,16 @@ export default function TrackerCard({ tracker }: { tracker: Tracker }) {
     try {
       setFormState("busy");
       const log: Log = {
-        type: "report",
         id: tracker.id,
         start: new Date(data.start).getTime(),
         end: new Date(data.end).getTime(),
         comment: data.comment ?? "",
       };
-      const duration = Math.ceil((log.end - log.start) / (1000 * 60));
-      if (duration < 0) {
+      if (log.end < log.start) {
         form.setError("end", { message: "The end must be after the start." });
         return;
       }
-      await runTransaction(db, async (transaction) => {
-        const projectRef = doc(
-          db,
-          Collection.Projects,
-          data.project
-        ).withConverter(projectConverter);
-        const projectSnapshot = await transaction.get(projectRef);
-        if (!projectSnapshot.exists()) {
-          console.log("error whilst saving. project undefined.");
-          return;
-        }
-        const project = projectSnapshot.data()!;
-        const timeBalance = project.timeBalance + duration;
-        transaction.update(projectRef, {
-          recentLogs: arrayUnion(log),
-          timeBalance,
-        });
-        transaction.delete(dbRef);
-      });
+      await addLog(data.project, log, tracker.id);
     } catch (e) {
       console.log(e);
     } finally {

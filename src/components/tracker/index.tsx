@@ -3,6 +3,7 @@ import { Collection } from "@/lib/collections";
 import { useAuthContext } from "@/lib/context/auth";
 import { trackerConverter } from "@/lib/converters";
 import { db } from "@/lib/firebase";
+import useIsStandalone from "@/lib/hooks/useIsStandalone";
 import { addDoc, collection } from "firebase/firestore";
 import { useAtomValue } from "jotai";
 import { PlusIcon } from "lucide-react";
@@ -14,6 +15,7 @@ import TrackerCard from "./TrackerCard";
 export default function Tracker() {
   const trackers = useAtomValue(trackersAtom);
   const { user } = useAuthContext();
+  const isStandalone = useIsStandalone();
 
   async function handleAddTracker() {
     await addDoc(
@@ -44,14 +46,16 @@ export default function Tracker() {
       }
     >
       <div className="space-y-6">
-        <div className="standalone:hidden flex items-center justify-between">
-          <h2 className="h1">Tracker</h2>
-          {trackers && trackers.length > 0 && (
-            <Button size="sm" onClick={handleAddTracker}>
-              Add <PlusIcon strokeWidth={2.5} />
-            </Button>
-          )}
-        </div>
+        {!isStandalone && (
+          <div className="flex items-center justify-between">
+            <h2 className="h1">Tracker</h2>
+            {trackers && trackers.length > 0 && (
+              <Button size="sm" onClick={handleAddTracker}>
+                Add <PlusIcon strokeWidth={2.5} />
+              </Button>
+            )}
+          </div>
+        )}
         {trackers ? (
           trackers.length > 0 ? (
             <div className="space-y-4">

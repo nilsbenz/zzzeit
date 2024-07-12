@@ -29,8 +29,8 @@ export default function Header({
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 border-b-2 bg-background/80 pl-safe-left pr-safe-right pt-safe-top backdrop-blur-sm">
-        <div className="flex h-[--header-height] items-center justify-between gap-2">
+      <header className="fixed left-0 right-0 top-0 z-50 h-[--header-height] border-b-2 bg-background/80 pl-safe-left pr-safe-right pt-safe-top backdrop-blur-sm">
+        <div className="flex h-full items-center justify-between gap-2">
           <Link
             to={isStandalone ? "#" : "/"}
             tabIndex={isStandalone ? -1 : undefined}
@@ -57,7 +57,7 @@ export default function Header({
               ) : (
                 <div className="shrink-0 animate-hourglass">
                   <HourglassIcon
-                    className="standalone:text-muted-foreground size-6 scale-90"
+                    className="size-6 scale-90 standalone:text-muted-foreground"
                     strokeWidth={3.25}
                   />
                 </div>
@@ -70,7 +70,7 @@ export default function Header({
             </div>
           </Link>
           {actions && (
-            <div className="standalone:flex hidden gap-2 pr-4">
+            <div className="hidden gap-2 pr-4 standalone:flex">
               {actions.map((action, index) => (
                 <Button
                   key={index}
@@ -88,14 +88,14 @@ export default function Header({
             to="/settings"
             className={cn(
               buttonVariants({ variant: "ghost", size: "icon" }),
-              "standalone:hidden mr-3 size-9 transition-shadow hover:bg-transparent focus-visible:ring-offset-0"
+              "mr-3 size-9 transition-shadow hover:bg-transparent focus-visible:ring-offset-0 standalone:hidden"
             )}
           >
             <Settings2Icon className="size-6" strokeWidth={2.5} />
           </Link>
         </div>
       </header>
-      <div className="mb-[2px] mt-safe-top h-[--header-height] w-full" />
+      <div className="mt-safe-top h-[--header-height] w-full sm:col-span-2" />
     </>
   );
 }

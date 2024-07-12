@@ -2,7 +2,7 @@ import {
   FirestoreDataConverter,
   QueryDocumentSnapshot,
 } from "firebase/firestore";
-import { LogBlock, Project, Tracker } from "./types";
+import { Project, Tracker, WeekLogs } from "./types";
 
 type Db<T> = Omit<T, "id">;
 
@@ -23,5 +23,5 @@ function createSimpleConverter<
 }
 
 export const projectConverter = createSimpleConverter<Project>();
-export const logBlockConverter = createSimpleConverter<LogBlock>();
+export const weekLogsConverter = createSimpleConverter<WeekLogs>();
 export const trackerConverter = createSimpleConverter<Tracker>();

@@ -5,30 +5,25 @@ export const Currency = {
 } as const;
 export type Currency = (typeof Currency)[keyof typeof Currency];
 
-export type Log =
-  | {
-      type: "report";
-      id: string;
-      start: number;
-      end: number;
-      comment: string;
-    }
-  | {
-      type: "bill";
-      id: string;
-      date: string;
-      amount: number;
-      currency: Currency;
-      billedTime: number;
-      comment: string;
-    };
-
-export type LogBlock = {
+export type Log = {
   id: string;
-  project: string;
-  userId: string;
+  start: number;
+  end: number;
+  comment: string;
+};
+
+export type Bill = {
+  id: string;
+  date: string;
+  amount: number;
+  currency: Currency;
+  billedHours: number;
+  comment: string;
+};
+
+export type WeekLogs = {
+  id: string;
   logs: Log[];
-  previousBlock: string | null;
 };
 
 export type Project = {
@@ -37,10 +32,8 @@ export type Project = {
   name: string;
   notes: string;
   timeBalance: number;
-  billedAmount: number;
-  recentLogs: Log[];
-  previousBlock: string | null;
-  createdAt: number;
+  bills: Bill[];
+  readonly _createdAt: number;
 };
 
 export type Tracker = {

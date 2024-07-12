@@ -13,6 +13,8 @@ export default function useDocumentSnapshot<T>(
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setData(undefined);
+
     const unsubscribe = onSnapshot(ref, (snapshot: DocumentSnapshot<T>) => {
       const newData = snapshot.data() ?? null;
       setData(newData);

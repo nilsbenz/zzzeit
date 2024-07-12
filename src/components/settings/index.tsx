@@ -1,5 +1,6 @@
 import { useAuthContext } from "@/lib/context/auth";
 import { auth } from "@/lib/firebase";
+import useIsStandalone from "@/lib/hooks/useIsStandalone";
 import { ReactNode } from "@tanstack/react-router";
 import { signOut } from "firebase/auth";
 import {
@@ -53,10 +54,11 @@ function Item({ label, children }: { label: ReactNode; children?: ReactNode }) {
 export default function Settings() {
   const { user } = useAuthContext();
   const { ternaryDarkMode, setTernaryDarkMode } = useTernaryDarkMode();
+  const isStandalone = useIsStandalone();
 
   return (
     <div className="space-y-6">
-      <h2 className="h1 standalone:hidden">Settings</h2>
+      {!isStandalone && <h2 className="h1">Settings</h2>}
       <Item label="Mail address">
         <p>{user.email}</p>
       </Item>

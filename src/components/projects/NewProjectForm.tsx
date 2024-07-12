@@ -74,10 +74,8 @@ export default function NewProjectForm({
         name: data.name,
         notes: "",
         timeBalance: 0,
-        billedAmount: 0,
-        recentLogs: [],
-        previousBlock: null,
-        createdAt: new Date().getTime(),
+        bills: [],
+        _createdAt: new Date().getTime(),
       };
       await setDoc(projectRef, newProject);
       form.reset({ name: "", slug: "" });
