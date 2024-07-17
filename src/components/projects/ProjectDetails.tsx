@@ -6,11 +6,12 @@ import useIsStandalone from "@/lib/hooks/useIsStandalone";
 import { removeLog } from "@/lib/logs";
 import { Log, Project, WeekLogs } from "@/lib/types";
 import {
+  cn,
   getCalendarWeek,
   getDuration,
   getMondayOfCalendarWeek,
 } from "@/lib/utils";
-import { addDays, addWeeks, endOfWeek, formatDate, isSameDay } from "date-fns";
+import { addDays, addWeeks, formatDate, isSameDay, isWeekend } from "date-fns";
 import { doc } from "firebase/firestore";
 import { ChevronLeftIcon, ChevronRightIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
@@ -24,25 +25,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
-
-function getWeekLabel(week: string) {
-  const thisWeek = getCalendarWeek();
-  const nextWeek = getCalendarWeek(addWeeks(new Date(), 1));
-  const lastWeek = getCalendarWeek(addWeeks(new Date(), -1));
-  const monday = getMondayOfCalendarWeek(week);
-  const sunday = endOfWeek(monday, { weekStartsOn: 1 });
-
-  switch (week) {
-    case thisWeek:
-      return "This week";
-    case nextWeek:
-      return "Next week";
-    case lastWeek:
-      return "Last week";
-    default:
-      return `${formatDate(monday, "dd.MM.")} - ${formatDate(sunday, "dd.MM.yyyy")}`;
-  }
-}
 
 function WeekSwitcher({
   value,
@@ -65,7 +47,9 @@ function WeekSwitcher({
       >
         <ChevronLeftIcon />
       </Button>
-      <h3 className="h2">{getWeekLabel(value)}</h3>
+      <h3 className="h2">
+        {formatDate(getMondayOfCalendarWeek(value), "MMMM")}
+      </h3>
       <Button
         variant="outline"
         size="icon"
@@ -128,7 +112,12 @@ function CalendarDay({
   }
 
   return (
-    <div className="group flex flex-col gap-2 py-2 [&:not(:first-child)]:border-l [&:not(:last-child)]:border-r">
+    <div
+      className={cn(
+        "group flex flex-col gap-2 py-2 [&:not(:first-child)]:border-l [&:not(:last-child)]:border-r",
+        isWeekend(date) && "border-background bg-border"
+      )}
+    >
       <Drawer>
         <DrawerTrigger asChild>
           <Button
@@ -179,10 +168,18 @@ function CalendarDay({
             (time) => (
               <div
                 key={time}
-                className="absolute left-0 right-0 flex h-0.5 items-center justify-center bg-border"
+                className={cn(
+                  "pointer-events-none absolute left-0 right-0 flex h-0.5 items-center justify-center",
+                  isWeekend(date) ? "bg-background" : "bg-border"
+                )}
                 style={{ top: getOffset(time) }}
               >
-                <span className="z-10 hidden rounded bg-border px-0.5 text-sm font-medium group-first:inline group-last:inline">
+                <span
+                  className={cn(
+                    "z-10 hidden rounded px-0.5 text-sm font-medium group-first:inline group-last:inline",
+                    isWeekend(date) ? "bg-background" : "bg-border"
+                  )}
+                >
                   {time}
                 </span>
               </div>
