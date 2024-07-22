@@ -17,7 +17,7 @@ export default function Layout({
   children?: ReactNode;
 }) {
   return (
-    <div className="grid h-dvh grid-cols-1 grid-rows-[auto_1fr_auto] sm:grid-cols-[auto_1fr] sm:grid-rows-[auto_1fr] standalone:h-screen">
+    <div className="grid h-dvh grid-cols-1 grid-rows-[auto_1fr_auto] pl-safe-left pr-safe-right sm:grid-cols-[auto_1fr] sm:grid-rows-[auto_1fr] standalone:h-screen">
       <Header title={title} backButton={backButton} actions={headerActions} />
       <Navigation />
       <main

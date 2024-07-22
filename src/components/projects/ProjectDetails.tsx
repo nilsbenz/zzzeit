@@ -1,3 +1,4 @@
+import { trackersAtom } from "@/lib/atoms";
 import { getWeekLogsPath } from "@/lib/collections";
 import { weekLogsConverter } from "@/lib/converters";
 import { db } from "@/lib/firebase";
@@ -13,8 +14,11 @@ import {
 } from "@/lib/utils";
 import { addDays, addWeeks, formatDate, isSameDay, isWeekend } from "date-fns";
 import { doc } from "firebase/firestore";
+import { useAtomValue } from "jotai";
 import { ChevronLeftIcon, ChevronRightIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { useInterval } from "usehooks-ts";
+import TrackerCard from "../tracker/TrackerCard";
 import { Button } from "../ui/button";
 import {
   Drawer,
@@ -25,6 +29,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 function WeekSwitcher({
   value,
@@ -67,14 +72,18 @@ function DayLogsListItem({ project, log }: { project: Project; log: Log }) {
     await removeLog(project.id, log);
   }
 
+  const durationInMinutes = (log.end - log.start) / (1000 * 60);
+
   return (
     <div key={log.id} className="flex items-center justify-between px-3 py-2">
       <div>
         <p className="font-semibold">
-          {formatDate(log.start, "HH:MM")} - {formatDate(log.end, "HH:MM")}
+          {formatDate(log.start, "HH:mm")} - {formatDate(log.end, "HH:mm")}
         </p>
         <p className="text-muted-foreground">
-          {Number(((log.end - log.start) / (1000 * 60 * 60)).toFixed(1))} Hours
+          {durationInMinutes >= 60 && `${Math.floor(durationInMinutes / 60)}h`}{" "}
+          {Math.floor(durationInMinutes % 60) !== 0 &&
+            `${Math.floor(durationInMinutes % 60)}min`}
         </p>
       </div>
       <Button variant="outline" size="icon" onClick={handleDelete}>
@@ -83,6 +92,9 @@ function DayLogsListItem({ project, log }: { project: Project; log: Log }) {
     </div>
   );
 }
+
+const PADDING_START = 5;
+const PADDING_END = 2;
 
 function CalendarDay({
   project,
@@ -94,9 +106,19 @@ function CalendarDay({
   logs: WeekLogs | null | undefined;
 }) {
   const dayLogs = logs?.logs.filter((l) => isSameDay(date, l.start));
+  const durationInMinutes =
+    dayLogs?.reduce((acc, curr) => acc + getDuration(curr), 0) ?? 0;
+  const [now, setNow] = useState(new Date().getTime());
 
-  const PADDING_START = 5;
-  const PADDING_END = 2;
+  const trackers = useAtomValue(trackersAtom)
+    ?.filter((t) => t.project === project.id)
+    .filter((t) => isSameDay(t.start, date));
+
+  const hasNoLogs = !dayLogs || dayLogs.length === 0;
+
+  useInterval(() => {
+    setNow(new Date().getTime());
+  }, 1000 * 60);
 
   function getOffset(time: string) {
     const [hours, minutes] = time.split(":").map(Number);
@@ -105,9 +127,10 @@ function CalendarDay({
     return `${(minutesPassed / totalMinutesInDay) * 100}%`;
   }
 
-  function getHeight(log: Log) {
+  function getHeight(log: { start: number; end: number | null }) {
     const totalMinutesInDay = (24 - PADDING_START - PADDING_END) * 60;
-    const duration = (log.end - log.start) / (1000 * 60);
+    const duration =
+      ((log.end ?? new Date().getTime()) - log.start) / (1000 * 60);
     return `${(duration / totalMinutesInDay) * 100}%`;
   }
 
@@ -127,31 +150,62 @@ function CalendarDay({
             <span className="text-xl font-extrabold sm:text-2xl">
               {formatDate(date, "d")}
             </span>
-            {dayLogs && (
-              <span>
-                {Number(
-                  (
-                    dayLogs.reduce((acc, curr) => acc + getDuration(curr), 0) /
-                    60
-                  ).toFixed(1)
-                )}
-                h
-              </span>
-            )}
+            <span>{Number((durationInMinutes / 60).toFixed(1))}h</span>
           </Button>
         </DrawerTrigger>
         <DrawerContent>
           <div className="mx-auto flex min-h-[50vh] w-full max-w-md flex-col">
             <DrawerHeader>
-              <DrawerTitle>
-                Logs from {formatDate(date, "MMMM dd, yyyy")}
-              </DrawerTitle>
+              <DrawerTitle>{formatDate(date, "dd MMMM yyyy")}</DrawerTitle>
             </DrawerHeader>
-            <div className="grow divide-y-2 p-4">
-              {dayLogs?.map((log) => (
-                <DayLogsListItem key={log.id} project={project} log={log} />
-              ))}
-              {(!dayLogs || dayLogs.length === 0) && <p>No logs yet.</p>}
+            <div className="max-h-full grow overflow-y-auto p-4">
+              <Tabs
+                defaultValue={
+                  hasNoLogs && trackers && trackers.length > 0
+                    ? "trackers"
+                    : "logs"
+                }
+              >
+                <TabsList className="mb-2 w-full">
+                  <TabsTrigger value="logs">Logs</TabsTrigger>
+                  <TabsTrigger value="trackers">Trackers</TabsTrigger>
+                </TabsList>
+                <TabsContent value="logs">
+                  {hasNoLogs ? (
+                    <p>No logs yet.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="divide-y-2">
+                        {dayLogs?.map((log) => (
+                          <DayLogsListItem
+                            key={log.id}
+                            project={project}
+                            log={log}
+                          />
+                        ))}
+                      </div>
+                      <p className="flex justify-between">
+                        <span>Total:</span>
+                        <span className="font-semibold">
+                          {durationInMinutes >= 60 &&
+                            `${Math.floor(durationInMinutes / 60)}h`}{" "}
+                          {Math.floor(durationInMinutes % 60) !== 0 &&
+                            `${Math.floor(durationInMinutes % 60)}min`}
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                </TabsContent>
+                <TabsContent value="trackers">
+                  {!trackers || trackers.length === 0 ? (
+                    <p>No active trackers.</p>
+                  ) : (
+                    trackers.map((tracker) => (
+                      <TrackerCard key={tracker.id} tracker={tracker} />
+                    ))
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
             <DrawerFooter>
               <DrawerClose asChild>
@@ -161,7 +215,6 @@ function CalendarDay({
           </div>
         </DrawerContent>
       </Drawer>
-
       {dayLogs && (
         <div className="relative grow">
           {["06:00", "09:00", "12:00", "15:00", "18:00", "21:00"].map(
@@ -191,17 +244,29 @@ function CalendarDay({
               variant="outline"
               className="absolute left-0.5 right-0.5 cursor-default border-primary/20 bg-primary/40 backdrop-blur-[3px] hover:bg-primary/50"
               style={{
-                top: getOffset(formatDate(log.start, "HH:MM")),
+                top: getOffset(formatDate(log.start, "HH:mm")),
                 height: getHeight(log),
               }}
               tabIndex={-1}
             />
           ))}
-          {isSameDay(date, new Date()) && (
+          {trackers?.map((tracker) => (
+            <Button
+              key={tracker.id}
+              variant="outline"
+              className="absolute left-0.5 right-0.5 animate-pulse cursor-default border-primary/20 bg-primary/40 backdrop-blur-[3px] hover:bg-primary/50"
+              style={{
+                top: getOffset(formatDate(tracker.start, "HH:mm")),
+                height: getHeight(tracker),
+              }}
+              tabIndex={-1}
+            />
+          ))}
+          {isSameDay(date, now) && (
             <div
               className="absolute left-0 right-0 h-0.5 bg-primary"
-              style={{ top: getOffset(formatDate(new Date(), "HH:MM")) }}
-            ></div>
+              style={{ top: getOffset(formatDate(now, "HH:mm")) }}
+            />
           )}
         </div>
       )}
@@ -221,7 +286,7 @@ function Calendar({
   const monday = getMondayOfCalendarWeek(week);
 
   return (
-    <div className="grid min-h-[400px] grow grid-cols-7">
+    <div className="grid min-h-[400px] grow grid-cols-7 overflow-clip">
       {new Array(7).fill(null).map((_, i) => (
         <CalendarDay
           key={formatDate(addDays(monday, i), "yyyy-MM-dd")}

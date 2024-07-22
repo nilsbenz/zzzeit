@@ -82,7 +82,7 @@ export function Navigation() {
           <ThemeToggle className="shrink-0" />
         </div>
       </aside>
-      <div className="row-start-3 mb-safe-bottom mt-[2px] h-[--nav-height] w-full shrink-0 sm:row-start-2 sm:ml-safe-left sm:mr-[2px] sm:h-px sm:w-[--nav-width-sm] lg:w-[--nav-width-lg]" />
+      <div className="row-start-3 mb-safe-bottom mt-[2px] h-[--nav-height] w-full shrink-0 sm:row-start-2 sm:mr-[2px] sm:h-px sm:w-[--nav-width-sm] lg:w-[--nav-width-lg]" />
     </>
   );
 }
